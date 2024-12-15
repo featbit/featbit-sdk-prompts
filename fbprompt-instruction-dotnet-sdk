@@ -1,0 +1,91 @@
+# FeatBit Feature Flag Command
+
+## Remove Feature Flag Command
+
+### Input Command:
+```bash
+-featbit -rm -ffname <feature-flag-name> -ffvalue <feature-flag-return-value>
+```
+
+### Prompt to execute:
+
+```
+Remove feature flag <feature-flag-name> from the selected files.
+
+Remove also the wrapper code for feature flag <feature-flag-name> when the return value is <feature-flag-return-value>.
+```
+
+### Fewshot examples:
+
+#### Example 1:
+
+Input Command:
+
+```bash
+-featbit -rm -ffname ff-checkout-process -ffvalue false
+```
+
+Prompt to execute:
+
+```
+Remove feature flag ff-checkout-process from the selected files.
+
+Remove also the wrapper code for feature flag ff-checkout-process when the return value is false.
+```
+
+Code in the selected files:
+
+```csharp
+var user = FbUser.Builder("anonymous").Build();
+var featureEnabled = _fbClient.BoolVariation("featbit-cursor-demo-v1", user, false);
+
+if (!featureEnabled)
+{
+    return BadRequest("Feature is not enabled");
+}
+
+return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
+```
+
+Output Code:
+
+```csharp
+return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
+```
+
+#### Example 2:
+
+Input Command:
+
+```bash
+-featbit -rm -ffname ff-checkout-process -ffvalue false
+```
+
+Prompt to execute:
+
+```
+Remove feature flag ff-checkout-process from the selected files.
+
+Remove also the wrapper code for feature flag ff-checkout-process when the return value is false.
+```
+
+Code in the selected files:
+
+```csharp
+var user = FbUser.Builder("anonymous").Build();
+var featureEnabled = _fbClient.BoolVariation("featbit-cursor-demo-v1", user, false);
+
+if (featureEnabled == true)
+{
+    return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
+}
+
+return BadRequest("Feature is not enabled");
+
+```
+
+Output Code:
+
+```csharp
+return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
+```
