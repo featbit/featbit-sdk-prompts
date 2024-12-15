@@ -13,6 +13,8 @@
 Remove feature flag <feature-flag-name> from the selected files.
 
 Remove also the wrapper code for feature flag <feature-flag-name> when the return value is <feature-flag-return-value>.
+
+If no feature flag is used in the file, remove also dependency injections and class properties.
 ```
 
 ### Fewshot examples:
@@ -23,14 +25,6 @@ Input Command:
 
 ```bash
 -featbit -rm -ffname ff-checkout-process -ffvalue false
-```
-
-Prompt to execute:
-
-```
-Remove feature flag ff-checkout-process from the selected files.
-
-Remove also the wrapper code for feature flag ff-checkout-process when the return value is false.
 ```
 
 Code in the selected files:
@@ -61,14 +55,6 @@ Input Command:
 -featbit -rm -ffname ff-checkout-process -ffvalue false
 ```
 
-Prompt to execute:
-
-```
-Remove feature flag ff-checkout-process from the selected files.
-
-Remove also the wrapper code for feature flag ff-checkout-process when the return value is false.
-```
-
 Code in the selected files:
 
 ```csharp
@@ -89,3 +75,50 @@ Output Code:
 ```csharp
 return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
 ```
+
+#### Example 3:
+
+Input Command:
+
+```bash
+-featbit -rm -ffname ff-checkout-process -ffvalue false
+```
+
+Code in the selected files:
+
+```csharp
+private readonly IFbClient _fbClient;
+private readonly FbUser _user;
+
+public ProductController(IFbClient fbClient)
+{
+    _fbClient = fbClient;
+    _user = FbUser.Builder("anonymous").Build();
+}
+
+[HttpPost]
+public IActionResult Create([FromBody] object productModel)
+{
+    var featureEnabled = _fbClient.BoolVariation("featbit-cursor-demo-v1", _user, false);
+    if (featureEnabled == true)
+    {
+        return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
+    }
+    return null;
+}
+```
+
+Output Code:
+
+```csharp
+public ProductController()
+{
+}
+
+[HttpPost]
+public IActionResult Create([FromBody] object productModel)
+{
+    return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
+}
+```
+
