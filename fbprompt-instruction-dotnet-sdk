@@ -1,6 +1,6 @@
 # FeatBit Feature Flag Command
 
-## Remove Feature Flag Command
+## Remove feature flag from the selected files.
 
 ### Input Command:
 ```bash
