@@ -2,38 +2,32 @@
 
 The following documentation is only available for .NET and Asp.Net code.
 
-## Remove feature flag from the selected files.
+- Remove feature flag <feature-flag-name> from the selected files.
+- Remove also the wrapper code for feature flag <feature-flag-name> when the return value is <feature-flag-return-value>.
+- If no feature flag is used in the file, remove also dependency injections and class properties.
+- If a feature flag variable is passed into other functions, you should also refactor the function code when removing feature flag.
 
-### Input Command:
+
+## Command:
 ```bash
 -featbit -rm -ffname <feature-flag-name> -ffvalue <feature-flag-return-value>
 ```
 
-### Prompt to execute:
+## Examples:
 
-```
-Remove feature flag <feature-flag-name> from the selected files.
+### Example 1:
 
-Remove also the wrapper code for feature flag <feature-flag-name> when the return value is <feature-flag-return-value>.
-
-If no feature flag is used in the file, remove also dependency injections and class properties.
-```
-
-### Fewshot examples:
-
-#### Example 1:
-
-Input Command:
+#### Input Command:
 
 ```bash
--featbit -rm -ffname ff-checkout-process -ffvalue false
+-featbit -rm -ffname featbit-feature-flag -ffvalue false
 ```
 
-Code in the selected files:
+#### Code in the selected files:
 
 ```csharp
 var user = FbUser.Builder("anonymous").Build();
-var featureEnabled = _fbClient.BoolVariation("featbit-cursor-demo-v1", user, false);
+var featureEnabled = _fbClient.BoolVariation("featbit-feature-flag", user, false);
 
 if (!featureEnabled)
 {
@@ -43,25 +37,25 @@ if (!featureEnabled)
 return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
 ```
 
-Output Code:
+#### Output Code after remove feature flag:
 
 ```csharp
 return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
 ```
 
-#### Example 2:
+### Example 2:
 
-Input Command:
+#### Input Command:
 
 ```bash
--featbit -rm -ffname ff-checkout-process -ffvalue false
+-featbit -rm -ffname featbit-feature-flag -ffvalue false
 ```
 
-Code in the selected files:
+#### Code in the selected files:
 
 ```csharp
 var user = FbUser.Builder("anonymous").Build();
-var featureEnabled = _fbClient.BoolVariation("featbit-cursor-demo-v1", user, false);
+var featureEnabled = _fbClient.BoolVariation("featbit-feature-flag", user, false);
 
 if (featureEnabled == true)
 {
@@ -72,21 +66,21 @@ return BadRequest("Feature is not enabled");
 
 ```
 
-Output Code:
+#### Output Code after remove feature flag:
 
 ```csharp
 return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
 ```
 
-#### Example 3:
+### Example 3:
 
-Input Command:
+#### Input Command:
 
 ```bash
--featbit -rm -ffname ff-checkout-process -ffvalue false
+-featbit -rm -ffname featbit-feature-flag -ffvalue false
 ```
 
-Code in the selected files:
+#### Code in the selected files:
 
 ```csharp
 private readonly IFbClient _fbClient;
@@ -101,7 +95,7 @@ public ProductController(IFbClient fbClient)
 [HttpPost]
 public IActionResult Create([FromBody] object productModel)
 {
-    var featureEnabled = _fbClient.BoolVariation("featbit-cursor-demo-v1", _user, false);
+    var featureEnabled = _fbClient.BoolVariation("featbit-feature-flag", _user, false);
     if (featureEnabled == true)
     {
         return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
@@ -110,7 +104,7 @@ public IActionResult Create([FromBody] object productModel)
 }
 ```
 
-Output Code:
+#### Output Code after remove feature flag:
 
 ```csharp
 public ProductController()
@@ -124,20 +118,20 @@ public IActionResult Create([FromBody] object productModel)
 }
 ```
 
-#### Example 4:
+### Example 4:
 
-Input Command:
+#### Input Command:
 
 ```bash
--featbit -rm -ffname ff-checkout-process -ffvalue false
+-featbit -rm -ffname featbit-feature-flag -ffvalue false
 ```
 
-Code in the selected files:
+#### Code in the selected files:
 
 ```csharp
 public bool Create(int id)
 {
-    var getFromDbV2 = _fbClient.BoolVariation("get-from-db-v2", _user, false);
+    var getFromDbV2 = _fbClient.BoolVariation("featbit-feature-flag", _user, false);
     return UpsertToDb(getFromDbV2)
 }
 
@@ -154,10 +148,15 @@ public bool UpsertToDb(bool getFromDbV2)
 }
 ```
 
-Output Code:
+#### Output Code after remove feature flag:
 
 ```csharp
 public bool Create(int id)
+{
+    return UpsertToDb()
+}
+
+public bool UpsertToDb(bool getFromDbV2)
 {
     return true;
 }
