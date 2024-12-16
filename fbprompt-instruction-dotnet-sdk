@@ -2,16 +2,17 @@
 
 The following documentation is only available for .NET and Asp.Net code.
 
-- Remove feature flag <feature-flag-name> from the selected files.
+- Remove feature flag from the codebase.
 - Remove also the wrapper code for feature flag <feature-flag-name> when the return value is <feature-flag-return-value>.
 - If no feature flag is used in the file, remove also dependency injections and class properties.
 - If a feature flag variable is passed into other functions, you should also refactor the function code when removing feature flag.
 
-
-## Command:
+Command:
 ```bash
 -featbit -rm -ffname <feature-flag-name> -ffvalue <feature-flag-return-value>
 ```
+Means:
+Remove feature flag <feature-flag-name> and all the wrapper code for feature flag <feature-flag-name> when the return value is <feature-flag-return-value>.
 
 ## Examples:
 
