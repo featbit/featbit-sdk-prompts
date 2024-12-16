@@ -1,5 +1,7 @@
 # FeatBit Feature Flag Command
 
+The following documentation is only available for .NET and Asp.Net code.
+
 ## Remove feature flag from the selected files.
 
 ### Input Command:
@@ -119,6 +121,52 @@ public ProductController()
 public IActionResult Create([FromBody] object productModel)
 {
     return CreatedAtAction(nameof(GetById), new { id = 1 }, productModel);
+}
+```
+
+#### Example 4:
+
+Input Command:
+
+```bash
+-featbit -rm -ffname ff-checkout-process -ffvalue false
+```
+
+Code in the selected files:
+
+```csharp
+public bool Create(int id)
+{
+    // some code
+    var getFromDbV2 = _fbClient.BoolVariation("get-from-db-v2", _user, false);
+    return UpsertToDb(getFromDbV2)
+}
+
+public bool UpsertToDb(bool getFromDbV2)
+{
+    if(getFromDbV2 == true)
+    {
+        return true;
+    }
+    else
+    {
+        return false
+    }
+}
+```
+
+Output Code:
+
+```csharp
+public bool Create(int id)
+{
+    // some code
+    return UpsertToDb(getFromDbV2)
+}
+
+public bool UpsertToDb(bool getFromDbV2)
+{
+    return true;
 }
 ```
 
