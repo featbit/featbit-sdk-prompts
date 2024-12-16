@@ -137,7 +137,6 @@ Code in the selected files:
 ```csharp
 public bool Create(int id)
 {
-    // some code
     var getFromDbV2 = _fbClient.BoolVariation("get-from-db-v2", _user, false);
     return UpsertToDb(getFromDbV2)
 }
@@ -159,12 +158,6 @@ Output Code:
 
 ```csharp
 public bool Create(int id)
-{
-    // some code
-    return UpsertToDb(getFromDbV2)
-}
-
-public bool UpsertToDb(bool getFromDbV2)
 {
     return true;
 }
